@@ -1,6 +1,9 @@
 package practica2;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -15,19 +18,17 @@ public class interfaz extends JFrame {
 	private JPopupMenu popupMenu = new JPopupMenu();
 	JSpinner cont = new JSpinner();
 	public int contador = 0;
-	public String car, modelo, col;
-	private JTextField tipe, fecha, nombre, descripcion;
 	private JButton s = new JButton("Salir");
 	private JTable tabla;
 	private JLabel etiqueta;
 	private static DefaultTableModel tipo;
 	JPanel panel = new JPanel(new BorderLayout());
-	JPanel panelTexto = new JPanel(new GridLayout(2, 5));
+	JPanel panelTexto = new JPanel(new GridLayout(1, 1));
 	JPanel panel1 = new JPanel(new GridLayout(3, 50));
 	JPanel panel2 = new JPanel(new GridLayout(4, 5));
 	JPanel panel3 = new JPanel(new GridLayout(3, 5));
 	JPanel panel4 = new JPanel(new GridLayout(4, 5));
-	JPanel panel5 = new JPanel(new GridLayout(4, 5));
+	JPanel panel5 = new JPanel(new GridLayout(1, 1));
 	JPanel panel6 = new JPanel(new GridLayout(4, 5));
 	JPanel panel8 = new JPanel(new GridLayout(5, 5));
 	JPanel panel9 = new JPanel(new GridLayout(6, 5));
@@ -38,10 +39,23 @@ public class interfaz extends JFrame {
 	//private JSlider re = new JSlider();
 	Graphics p;
 	
+	private class CloseListener implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+	        //DO SOMETHING
+	        System.exit(0);
+	    }
+	}
+	
+	private class CrearTareaListener implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+	        //DO SOMETHING
+	    	createTask v = new createTask();
+			v.setVisible(true);
+	    }
+	}
+	
 	public interfaz() throws ClassNotFoundException {
-		
-		setTitle(car);
-		
+				
 		this.setLocation(350, 50);
 		panel.add(getPanelTexto(), BorderLayout.NORTH);
 		panel.add(getPanelTabla(), BorderLayout.CENTER);
@@ -54,7 +68,7 @@ public class interfaz extends JFrame {
 	}
 	
 	private JScrollPane getPanelTabla() {
-		Object[][] datos = {};
+		String[][] datos = {};
 		tipo = new DefaultTableModel(datos, columnas);
 		tabla = new JTable(tipo);
 		
@@ -83,38 +97,13 @@ public class interfaz extends JFrame {
 		
 		panel5.add(panel12);
 		
+		s.addActionListener(new CloseListener());
 		panel5.add(s);
 		
-		JLabel Tipo = new JLabel("Tipo");
-		tipe = new JTextField("");
 		
-		JLabel Fecha = new JLabel("Fecha");
-		fecha = new JTextField("");
-		JLabel Nombre = new JLabel("Nombre");
-		nombre = new JTextField("");
-		JLabel Desc = new JLabel("Descripción");
-		descripcion = new JTextField("");
-		JButton btnAgregar = new JButton("Agregar");
-		
-		JButton btnQuitar = new JButton("Quitar");
-		
-		menuItem1 = new JMenuItem("ELIMINAR");
-		popupMenu.add(menuItem1);
-		
-		popupMenu.addSeparator();
-		menuItem2 = new JMenuItem("ORDENAR");
-		popupMenu.add(menuItem2);
-		panel2.add(Tipo);
-		panel2.add(tipe);
-		panel2.add(Nombre);
-		panel2.add(nombre);
-		panel2.add(Fecha);
-		panel2.add(fecha);
-		panel2.add(Desc);
-		panel2.add(descripcion);
-		
+		JButton btnAgregar = new JButton("Nueva Tarea");
+		btnAgregar.addActionListener(new CrearTareaListener());
 		panelTexto.add(btnAgregar);
-		panelTexto.add(btnQuitar);
 		
 		
 		JPanel panel = new JPanel(new FlowLayout());
@@ -130,25 +119,7 @@ public class interfaz extends JFrame {
 		return panel;
 	}
 	
-	public static void anadirDatos(DefaultTableModel modelo, int fecha, String descripcion, String tipo, String nombre){
-		for (int i=0; i<50; i++){
-        	fecha=i*1000+i;
-        	descripcion = "Descripcion " + i;
-        	if (i%2==0){
-        		tipo="General"; 
-        		nombre="";
-        	}
-        	else{
-        		tipo="Específico";
-        		nombre = "Tarea "+ i;
-        	}
-        	modelo.addRow( new Object[] {tipo, fecha, nombre, descripcion} );	
-        }
-	}
-	
-	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
-		JFrame.setDefaultLookAndFeelDecorated(true);
-		new interfaz();
-		anadirDatos(tipo, 0,null,null,null);
+	public static void anadirDatos(Task tarea){
+		tipo.addRow( new String[] {tarea.getType(), tarea.getDate(), tarea.getName(), tarea.getDescription()} );	
 	}
 }
